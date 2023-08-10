@@ -3,7 +3,7 @@ import React from 'react'
 
 //temp is given in kelvins
 function Card({data}) {
-    console.log(data);
+    //console.log(data);
   return (
     <div>
       <h1>Location: {data.name} {data.sys.country}</h1>

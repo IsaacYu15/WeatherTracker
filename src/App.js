@@ -1,7 +1,6 @@
 import Map from './Maps.js';
 import React, { useState, useEffect } from 'react';
 import Card from './Card.js';
-const apikey = '0A_kuH0XYspmtiIk5SY6UnaWeHm6s7NO6qpzoEVlpXA';
 
 
 function App() {
@@ -20,18 +19,13 @@ function App() {
       })
 
       //get api, and store as a JSON- >look into JSONS
-      console.log (process.env.REACT_APP_API_KEY);
-      console.log (process.env.REACT_APP_API_URL);
-      await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&APPID=${process.env.REACT_APP_API_KEY}`)
+      await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&APPID="+process.env.REACT_APP_API_KEY)
       .then(response => {
         return response.json()
       })
       .then(data => {
         setData(data)
       })
-
-      //ITSS GIVVIVNNNGG:Failed to load resource: the server responded with a status of 400 (Bad Request) but it works tho :) now it doesnt:(
-
     }
 
     fetchData();
@@ -45,14 +39,17 @@ function App() {
       <h1>{lat} {long}</h1>
       {(typeof data.main != 'undefined') ? (
         <Card data={data}/>
-        
       ): (
         <div></div>
       )}
 
-    <div>
-      <Map apikey={apikey} />
-    </div>
+      {(typeof data.main != 'undefined') ? (
+         <Map apikey={process.env.REACT_APP_API_KEY_HEREMAPS} newLat={lat} newLong={long} />
+      ): (
+        <div></div>
+      )}
+
+
 
     </div>
 

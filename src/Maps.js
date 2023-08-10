@@ -1,12 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import H from '@here/maps-api-for-javascript';
 
-const Map = ( props ) => {
-   
+const Map = ( props) => {
+
     const mapRef = useRef(null);
     const map = useRef(null);
     const platform = useRef(null)
     const { apikey } = props;
+    const { newLat } = props; //what is happening here?
+    const { newLong } = props;
+
 
     useEffect(
         () => {
@@ -34,8 +37,8 @@ const Map = ( props ) => {
             const newMap = new H.Map(mapRef.current, rasterTileLayer, {
               pixelRatio: window.devicePixelRatio,
               center: {
-                lat: 64.144,
-                lng: -21.94,
+                lat:  newLat,
+                lng: newLong,
               },
               zoom: 14,
             });
