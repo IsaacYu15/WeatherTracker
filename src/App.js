@@ -45,9 +45,14 @@ function App() {
 
       {(typeof data.main != 'undefined') ? (
          <Map apikey={process.env.REACT_APP_API_KEY_HEREMAPS} newLat={lat} newLong={long} />
+
       ): (
         <div></div>
       )}
+
+
+
+    
 
 
 

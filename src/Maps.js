@@ -11,8 +11,17 @@ const Map = ( props) => {
     const { newLong } = props;
 
 
+    const onClickMap = ('tap', function (evt) {
+      var coord = mapRef.screenToGeo(evt.currentPointer.viewportX,
+              evt.currentPointer.viewportY);
+      console.Log('Clicked at ' + Math.abs(coord.lat.toFixed(4)) +
+          ((coord.lat > 0) ? 'N' : 'S') +
+          ' ' + Math.abs(coord.lng.toFixed(4)) +
+           ((coord.lng > 0) ? 'E' : 'W'));
+    });
+
     useEffect(
-        () => {
+      () => {
 
           // Check if the map object has already been created
           if (!map.current) {
@@ -56,8 +65,18 @@ const Map = ( props) => {
         [apikey]
       );
      
+      //NO WORKIE :((((((((()))))))))
+
+      /*
+      mapRef.addEventListener('tap', function(evt) {
+
+
+      });
+      */
       // Return a div element to hold the map
-      return <div style={ { width: "100%", height: "500px" } } ref={mapRef} />;
+      return <div style={ { width: "100%", height: "500px" } } ref={mapRef} id="map" onClick = {onClickMap()} />;
+
+
 
       
    }
