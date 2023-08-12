@@ -1,9 +1,8 @@
 import React from 'react'
-//rfce + tab
 
 //temp is given in kelvins
-function Card({data}) {
-    //console.log(data);
+function Card({data})  {
+  console.log(data);
   return (
     <div>
       <h1>Location: {data.name} {data.sys.country}</h1>

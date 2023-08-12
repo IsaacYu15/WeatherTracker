@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import H from '@here/maps-api-for-javascript';
-
+import Card from './Card.js';
 const Map = ({apikey, newLat, newLong}) => {
 
     const mapRef = useRef(null);
@@ -9,9 +9,10 @@ const Map = ({apikey, newLat, newLong}) => {
 
     const [lat, setLat] = useState([]);
     const [long, setLong] = useState([]);
+    const [data, setData] = useState([]);
 
-    useEffect(
-      () => {
+    useEffect(() => {
+      const initMap = () => {
         // Check if the map object has already been created
         if (!map.current) {
           // Create a platform object with the API key
@@ -55,28 +56,47 @@ const Map = ({apikey, newLat, newLong}) => {
               setLat(coord.lat);
               setLong(coord.lng);
 
+              fetchData();
+
           });
    
           // Set the map object to the reference
           map.current = newMap;
         }
-      },
-      // Dependencies array
-      [apikey]
-    );
+      }
+
+      initMap();
+    },[apikey]);
+
+    const fetchData = async() => {
+      await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&APPID="+process.env.REACT_APP_API_KEY, {
+
+      })
+        .then(response => {
+          return response.json()
+        })
+        .then(data => {
+          setData(data)
+        })
+    }
    
-    // Return a div element to hold the map
-    return (
-      <section>
-         <h1>Lat: {lat} Long: {long}</h1>
-         <div style={ { width: "100%", height: "500px" } } ref={mapRef} />    
-      </section>
-
-    );
 
 
+
+  return (
+  <section>
+    <h1>Lat: {lat} Long: {long}</h1>
+      {(typeof data.main != 'undefined') ? (
+        <Card data={data}/>
+      ): (
+        <div></div>
+      )}
       
-   }
+
+      <div style={ { width: "100%", height: "500px" } } ref={mapRef} />    
+    </section>
+  );
+}
 
    export default Map;
    
