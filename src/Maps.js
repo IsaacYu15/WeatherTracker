@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import H from '@here/maps-api-for-javascript';
 
-const Map = ( props) => {
+const Map = ({apikey, newLat, newLong}) => {
 
     const mapRef = useRef(null);
     const map = useRef(null);
     const platform = useRef(null)
-    const { apikey } = props;
-    let { newLat } = props; //what is happening here?
-    let { newLong } = props;
+
+    const [lat, setLat] = useState([]);
+    const [long, setLong] = useState([]);
 
     useEffect(
       () => {
@@ -40,6 +40,8 @@ const Map = ( props) => {
             zoom: 14,
           });
 
+          setLat(newLat);
+          setLong(newLong);
    
           // Add panning and zooming behavior to the map
           const behavior = new H.mapevents.Behavior(
@@ -50,8 +52,8 @@ const Map = ( props) => {
             var coord = newMap.screenToGeo(evt.currentPointer.viewportX,
               evt.currentPointer.viewportY);
 
-              newLat.current = coord.lat;
-              newLong.current = coord.lng;
+              setLat(coord.lat);
+              setLong(coord.lng);
 
           });
    
@@ -66,7 +68,7 @@ const Map = ( props) => {
     // Return a div element to hold the map
     return (
       <section>
-         <h1>Lat: {newLat} Long: {newLong}</h1>
+         <h1>Lat: {lat} Long: {long}</h1>
          <div style={ { width: "100%", height: "500px" } } ref={mapRef} />    
       </section>
 
