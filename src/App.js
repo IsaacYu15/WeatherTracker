@@ -19,7 +19,10 @@ function App() {
       })
 
       //get api, and store as a JSON- >look into JSONS
-      await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&APPID="+process.env.REACT_APP_API_KEY)
+      await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&APPID="+process.env.REACT_APP_API_KEY, {
+        method: 'POST',  
+        mode: 'cors'
+      })
       .then(response => {
         return response.json()
       })
@@ -36,7 +39,6 @@ function App() {
   return (
 
     <div className="App">
-      <h1>{lat} {long}</h1>
       {(typeof data.main != 'undefined') ? (
         <Card data={data}/>
       ): (
