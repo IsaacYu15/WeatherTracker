@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import H from '@here/maps-api-for-javascript';
 import Card from './Card.js';
 
+//https://coolors.co/d62839-ba324f-175676-4ba3c3-cce6f4
+
 const Map = ({apikey}) => {
 
     const mapRef = useRef(null);
@@ -13,6 +15,23 @@ const Map = ({apikey}) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
+
+      const initLatLong = async() => {
+
+        if (lat.length == 0 || long.length == 0) {
+
+          navigator.geolocation.getCurrentPosition(function(position) {
+            
+            setLat(position.coords.latitude);
+            setLong(position.coords.longitude);
+
+            fetchData(position.coords.latitude, position.coords.longitude);
+            initMap(position.coords.latitude, position.coords.longitude);
+          })
+        }
+      }
+
+
       const initMap = (newLat, newLong) => {
         // Check if the map object has already been created
         if (!map.current) {
@@ -46,6 +65,8 @@ const Map = ({apikey}) => {
           const behavior = new H.mapevents.Behavior(
             new H.mapevents.MapEvents(newMap)
           );
+
+
           
           newMap.addEventListener("tap", (evt) => {
             var coord = newMap.screenToGeo(evt.currentPointer.viewportX,
@@ -55,6 +76,9 @@ const Map = ({apikey}) => {
               setLat(coord.lat);
               setLong(coord.lng);
 
+              var marker = new H.map.Marker({lat:coord.lat, lng:coord.lng});
+              newMap.addObject(marker);
+              
               fetchData(coord.lat, coord.lng);
 
           });
@@ -64,37 +88,28 @@ const Map = ({apikey}) => {
         }
     
   
-    }
-
-      const initLatLong = async() => {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          setLat(position.coords.latitude);
-          setLong(position.coords.longitude);
-
-          console.log(lat + "  " + long);
-
-          fetchData(position.coords.latitude, position.coords.longitude);
-          initMap(position.coords.latitude, position.coords.longitude);
-        })
+    
       }
 
-      initLatLong();
+      const fetchData = async(adjustLat, adjustLong) => {
+
+        await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+adjustLat+"&lon="+adjustLong+"&APPID="+process.env.REACT_APP_API_KEY, {
+          method: 'POST',  
+          mode: 'cors'
+        })
+          .then(response => {
+            return response.json()
+          })
+          .then(data => {
+            setData(data)
+          })
+      }
+      
+    initLatLong();
 
     },[apikey, lat, long]);
 
-    const fetchData = async(adjustLat, adjustLong) => {
 
-      await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+adjustLat+"&lon="+adjustLong+"&APPID="+process.env.REACT_APP_API_KEY, {
-        method: 'POST',  
-        mode: 'cors'
-      })
-        .then(response => {
-          return response.json()
-        })
-        .then(data => {
-          setData(data)
-        })
-    }
    
   return (
   <section>
