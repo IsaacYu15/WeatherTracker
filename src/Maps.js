@@ -56,7 +56,7 @@ const Map = ({apikey, newLat, newLong}) => {
               setLat(coord.lat);
               setLong(coord.lng);
 
-              fetchData();
+              fetchData(coord.lat, coord.lng);
 
           });
    
@@ -68,9 +68,11 @@ const Map = ({apikey, newLat, newLong}) => {
       initMap();
     },[apikey]);
 
-    const fetchData = async() => {
-      await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&APPID="+process.env.REACT_APP_API_KEY, {
+    const fetchData = async(adjustLat, adjustLong) => {
 
+      await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+adjustLat+"&lon="+adjustLong+"&APPID="+process.env.REACT_APP_API_KEY, {
+        method: 'POST',  
+        mode: 'cors'
       })
         .then(response => {
           return response.json()
