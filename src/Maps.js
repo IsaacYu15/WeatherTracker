@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import H from '@here/maps-api-for-javascript';
 import Card from './Card.js';
-const Map = ({apikey, newLat, newLong}) => {
+
+const Map = ({apikey}) => {
 
     const mapRef = useRef(null);
     const map = useRef(null);
@@ -12,7 +13,7 @@ const Map = ({apikey, newLat, newLong}) => {
     const [data, setData] = useState([]);
 
     useEffect(() => {
-      const initMap = () => {
+      const initMap = (newLat, newLong) => {
         // Check if the map object has already been created
         if (!map.current) {
           // Create a platform object with the API key
@@ -40,9 +41,6 @@ const Map = ({apikey, newLat, newLong}) => {
             },
             zoom: 14,
           });
-
-          setLat(newLat);
-          setLong(newLong);
    
           // Add panning and zooming behavior to the map
           const behavior = new H.mapevents.Behavior(
@@ -64,10 +62,25 @@ const Map = ({apikey, newLat, newLong}) => {
           // Set the map object to the reference
           map.current = newMap;
         }
+    
+  
+    }
+
+      const initLatLong = async() => {
+        navigator.geolocation.getCurrentPosition(function(position) {
+          setLat(position.coords.latitude);
+          setLong(position.coords.longitude);
+
+          console.log(lat + "  " + long);
+
+          fetchData(position.coords.latitude, position.coords.longitude);
+          initMap(position.coords.latitude, position.coords.longitude);
+        })
       }
 
-      initMap();
-    },[apikey]);
+      initLatLong();
+
+    },[apikey, lat, long]);
 
     const fetchData = async(adjustLat, adjustLong) => {
 
@@ -83,9 +96,6 @@ const Map = ({apikey, newLat, newLong}) => {
         })
     }
    
-
-
-
   return (
   <section>
     <h1>Lat: {lat} Long: {long}</h1>
@@ -95,7 +105,6 @@ const Map = ({apikey, newLat, newLong}) => {
         <div></div>
       )}
       
-
       <div style={ { width: "100%", height: "500px" } } ref={mapRef} />    
     </section>
   );
