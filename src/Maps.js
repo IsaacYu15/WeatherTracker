@@ -53,6 +53,7 @@ const Map = ({apikey, newLat, newLong}) => {
             var coord = newMap.screenToGeo(evt.currentPointer.viewportX,
               evt.currentPointer.viewportY);
 
+              //pass in data
               setLat(coord.lat);
               setLong(coord.lng);
 
