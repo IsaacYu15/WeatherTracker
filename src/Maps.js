@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import H from '@here/maps-api-for-javascript';
 import Card from './Card.js';
+import './Maps.css';
+
 
 //https://coolors.co/d62839-ba324f-175676-4ba3c3-cce6f4
 
@@ -66,8 +68,6 @@ const Map = ({apikey}) => {
             new H.mapevents.MapEvents(newMap)
           );
 
-
-          
           newMap.addEventListener("tap", (evt) => {
             var coord = newMap.screenToGeo(evt.currentPointer.viewportX,
               evt.currentPointer.viewportY);
@@ -112,13 +112,16 @@ const Map = ({apikey}) => {
 
    
   return (
-  <section>
-    <h1>Lat: {lat} Long: {long}</h1>
-      {(typeof data.main != 'undefined') ? (
-        <Card data={data}/>
-      ): (
-        <div></div>
-      )}
+  <section className = "Content" >
+
+      <div className = "Data">
+        {(typeof data.main != 'undefined') ? (
+          <Card data={data}/>
+        ): (
+          <div></div>
+        )}
+        <h1 className = "LatLong">Lat: { Math.round(lat * 100000)/ 100000 } Long: { Math.round(long * 100000)/ 100000 }</h1>
+      </div>
       
       <div style={ { width: "100%", height: "500px" } } ref={mapRef} />    
     </section>
