@@ -123,7 +123,7 @@ const Map = ({apikey}) => {
         <h1 className = "LatLong">Latitude: { Math.round(lat * 100000)/ 100000 } Longitude: { Math.round(long * 100000)/ 100000 }</h1>
       </div>
       
-      <div className = "Map" style={ { width: "100%", height: "500px" } } ref={mapRef} />    
+      <div className = "Mappy" style={ { width: "100%", height: "500px" } } ref={mapRef} />    
     </section>
   );
 }
