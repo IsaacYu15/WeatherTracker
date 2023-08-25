@@ -15,8 +15,10 @@ const Map = ({apikey}) => {
 
     useEffect(() => {
 
+      //lat long based on geo location
       const initLatLong = async() => {
 
+        //ass use state does not update immediately
         if (lat.length === 0 || long.length === 0) {
 
           navigator.geolocation.getCurrentPosition(function(position) {
@@ -33,23 +35,22 @@ const Map = ({apikey}) => {
 
           // Check if the map object has already been created
           if (!map.current) {
-            // Create a platform object with the API key
+
             platform.current = new H.service.Platform({ apikey });
-            // Create a new Raster Tile service instance
+
             const rasterTileService = platform.current.getRasterTileService({
               queryParams: {
                 style: "explore.day",
                 size: 512,
               },
             });
-            // Creates a new instance of the H.service.rasterTile.Provider class
-            // The class provides raster tiles for a given tile layer ID and pixel format
+
             const rasterTileProvider = new H.service.rasterTile.Provider(
               rasterTileService
             );
-            // Create a new Tile layer with the Raster Tile provider
+
             const rasterTileLayer = new H.map.layer.TileLayer(rasterTileProvider);
-            // Create a new map instance with the Tile layer, center and zoom level
+
             const newMap = new H.Map(mapRef.current, rasterTileLayer, {
               pixelRatio: window.devicePixelRatio,
               center: {
@@ -75,7 +76,11 @@ const Map = ({apikey}) => {
                 var marker = new H.map.Marker({lat:coord.lat, lng:coord.lng});
                 newMap.addObject(marker);
                 
-                fetchData(coord.lat, coord.lng);
+                //as use state does not update immediately
+                if (lat === coord.lat) {
+                  fetchData();
+                }
+
 
             });
     
@@ -84,10 +89,9 @@ const Map = ({apikey}) => {
           }
         }
     
-  
-    
       }
 
+      //fetch weather data based on location
       const fetchData = async() => {
 
         if (lat.length !== 0 || long.length !== 0) {
