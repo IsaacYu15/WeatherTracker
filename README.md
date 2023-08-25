@@ -1,3 +1,15 @@
+# Weather Tracker
+This project allows a user to click on any location on the map. Using the latitutude and longitude, the program will output corresponding weather stastics (e.g. wind speed, temperature, and humidity). This is accomplished through a combination of Here Maps API and Open Weather API
+
+## Built using
+  - Javascript
+  - HTML
+  - CSS
+  - React.js
+  
+  - [Here Maps API](https://developer.here.com/?cid=Developer_Map-Making-Google-YT-0-Dev-AMER-CA&utm_source=Google&utm_medium=ppc&utm_campaign=Dev_PaidSearch_DevPortal_AlwaysOn&utm_term=&gclid=Cj0KCQjw_5unBhCMARIsACZyzS0cWHSMXToE_Dc_VpuTE_BPYfihKRC-GW-OOyfW3W2l79hZRIQBvwUaAkL9EALw_wcB&gclsrc=aw.ds)
+  - [Open Weather API](https://openweathermap.org/api)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
