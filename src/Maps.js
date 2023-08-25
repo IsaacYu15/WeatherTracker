@@ -3,9 +3,6 @@ import H from '@here/maps-api-for-javascript';
 import Card from './Card.js';
 import './Maps.css';
 
-
-//https://coolors.co/d62839-ba324f-175676-4ba3c3-cce6f4
-
 const Map = ({apikey}) => {
 
     const mapRef = useRef(null);
@@ -20,92 +17,96 @@ const Map = ({apikey}) => {
 
       const initLatLong = async() => {
 
-        if (lat.length == 0 || long.length == 0) {
+        if (lat.length === 0 || long.length === 0) {
 
           navigator.geolocation.getCurrentPosition(function(position) {
             
             setLat(position.coords.latitude);
             setLong(position.coords.longitude);
-
-            fetchData(position.coords.latitude, position.coords.longitude);
-            initMap(position.coords.latitude, position.coords.longitude);
-          })
+          });
         }
       }
 
 
-      const initMap = (newLat, newLong) => {
-        // Check if the map object has already been created
-        if (!map.current) {
-          // Create a platform object with the API key
-          platform.current = new H.service.Platform({ apikey });
-          // Create a new Raster Tile service instance
-          const rasterTileService = platform.current.getRasterTileService({
-            queryParams: {
-              style: "explore.day",
-              size: 512,
-            },
-          });
-          // Creates a new instance of the H.service.rasterTile.Provider class
-          // The class provides raster tiles for a given tile layer ID and pixel format
-          const rasterTileProvider = new H.service.rasterTile.Provider(
-            rasterTileService
-          );
-          // Create a new Tile layer with the Raster Tile provider
-          const rasterTileLayer = new H.map.layer.TileLayer(rasterTileProvider);
-          // Create a new map instance with the Tile layer, center and zoom level
-          const newMap = new H.Map(mapRef.current, rasterTileLayer, {
-            pixelRatio: window.devicePixelRatio,
-            center: {
-              lat: newLat,
-              lng: newLong,
-            },
-            zoom: 14,
-          });
-   
-          // Add panning and zooming behavior to the map
-          const behavior = new H.mapevents.Behavior(
-            new H.mapevents.MapEvents(newMap)
-          );
+      const initMap = () => {
+        if (lat.length !== 0 || long.length !== 0) {
 
-          newMap.addEventListener("tap", (evt) => {
-            var coord = newMap.screenToGeo(evt.currentPointer.viewportX,
-              evt.currentPointer.viewportY);
+          // Check if the map object has already been created
+          if (!map.current) {
+            // Create a platform object with the API key
+            platform.current = new H.service.Platform({ apikey });
+            // Create a new Raster Tile service instance
+            const rasterTileService = platform.current.getRasterTileService({
+              queryParams: {
+                style: "explore.day",
+                size: 512,
+              },
+            });
+            // Creates a new instance of the H.service.rasterTile.Provider class
+            // The class provides raster tiles for a given tile layer ID and pixel format
+            const rasterTileProvider = new H.service.rasterTile.Provider(
+              rasterTileService
+            );
+            // Create a new Tile layer with the Raster Tile provider
+            const rasterTileLayer = new H.map.layer.TileLayer(rasterTileProvider);
+            // Create a new map instance with the Tile layer, center and zoom level
+            const newMap = new H.Map(mapRef.current, rasterTileLayer, {
+              pixelRatio: window.devicePixelRatio,
+              center: {
+                lat: lat,
+                lng: long,
+              },
+              zoom: 14,
+            });
+    
+            // Add panning and zooming behavior to the map
+            const behavior = new H.mapevents.Behavior(
+              new H.mapevents.MapEvents(newMap)
+            );
 
-              //pass in data
-              setLat(coord.lat);
-              setLong(coord.lng);
+            newMap.addEventListener("tap", (evt) => {
+              var coord = newMap.screenToGeo(evt.currentPointer.viewportX,
+                evt.currentPointer.viewportY);
 
-              var marker = new H.map.Marker({lat:coord.lat, lng:coord.lng});
-              newMap.addObject(marker);
-              
-              fetchData(coord.lat, coord.lng);
+                //pass in data
+                setLat(coord.lat);
+                setLong(coord.lng);
 
-          });
-   
-          // Set the map object to the reference
-          map.current = newMap;
+                var marker = new H.map.Marker({lat:coord.lat, lng:coord.lng});
+                newMap.addObject(marker);
+                
+                fetchData(coord.lat, coord.lng);
+
+            });
+    
+            // Set the map object to the reference
+            map.current = newMap;
+          }
         }
     
   
     
       }
 
-      const fetchData = async(adjustLat, adjustLong) => {
+      const fetchData = async() => {
 
-        await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+adjustLat+"&lon="+adjustLong+"&APPID="+process.env.REACT_APP_API_KEY, {
-          method: 'POST',  
-          mode: 'cors'
-        })
+        if (lat.length !== 0 || long.length !== 0) {
+          await fetch("https://api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+long+"&APPID="+process.env.REACT_APP_API_KEY, {
+            method: 'POST',  
+            mode: 'cors'
+          })
           .then(response => {
             return response.json()
           })
           .then(data => {
-            setData(data)
+              setData(data)
           })
+        }
       }
       
     initLatLong();
+    fetchData();
+    initMap();
 
     },[apikey, lat, long]);
 

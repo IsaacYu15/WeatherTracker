@@ -9,7 +9,7 @@ function App() {
 
       <div className="Hero">
         <h1>WEATHER APP</h1>
-        <p>Click on the map, based on the latitude and longitude  you will be able to see weather stastics!</p>
+        <p>Click on the map to get the latitude and longitude and corresponding weather stastics!</p>
       </div>
 
       <Map apikey={process.env.REACT_APP_API_KEY_HEREMAPS}/>
